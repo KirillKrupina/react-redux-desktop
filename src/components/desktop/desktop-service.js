@@ -16,5 +16,4 @@ export default class DesktopService {
         const res = await this.getResourse();
         return res;
     };
-
 }

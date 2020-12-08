@@ -6,13 +6,12 @@ import DesktopService from '../desktop/desktop-service';
 
 const desktopService = new DesktopService()
 
-import './app.css'
 
 const App = () => {
   return(
     <div>
       <DesktopIconsServiceProvider value={desktopService}>
-       <Desktop/>
+       <Desktop desktopService={desktopService}/>
       </DesktopIconsServiceProvider>
     </div>
   )

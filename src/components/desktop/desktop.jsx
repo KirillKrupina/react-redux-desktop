@@ -1,35 +1,47 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useEffect} from 'react';
 
 import Header from './header';
 import DesktopIconsServiceContext from '../../contexts/desktop-icons-service-context/desktop-icons-service-context'
 import ModulesList from './modules-list/modules-list';
+import { fetchDesktopData } from './actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-const Desktop = () => {
-    const [data, setData] = useState({
-        data: []
-    });
 
-    /**
-     * @type DesktopService
-     */
-    const value = useContext(DesktopIconsServiceContext);
 
+const Desktop = (props) => {
+   
+    const {user, modules} = props;
 
     useEffect(() => {
-        value.getData()
-            .then(data => {
-                setData(data)
-            })
-            .catch(e => console.log(e))
+        console.log(props);
+        props.fetchDesktopData()
     }, []);
 
 
     return (
         <>
-            <Header user={data.user} />
-            <ModulesList modules={data.modules}/>
+            <Header user={user}/>
+            <ModulesList />
         </>
     )
 };
 
-export default Desktop;
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.desktopData.user,
+        modules: state.desktopData.modules,
+        loading: state.loading,
+        error: state.error
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    const desktopService = ownProps.desktopService;
+    return bindActionCreators({
+        fetchDesktopData: fetchDesktopData(desktopService)
+    }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Desktop);

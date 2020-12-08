@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Paper, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -19,10 +20,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const IconsGrid = ({modules}) => {
+const IconsGrid = (props) => {
     const classes = useStyles();
 
-    if (!modules) {
+    if (!props.modules) {
         return (
             <div>
                 Loading...
@@ -32,10 +33,10 @@ const IconsGrid = ({modules}) => {
         return (
             <div className={classes.root}>
                 <Grid container className={classes.grid} direction="row" justify="flex-start" spacing={3}>
-                    {modules.map(module => {
+                    {props.modules.map(module => {
                         if (module.launcher.shortcut) {
                             return (
-                                <Grid item xs={6} md={4} lg={2} className={classes.gridItem}>
+                                <Grid key={module.id} item xs={6} md={4} lg={2} className={classes.gridItem}>
                                     <Paper className={classes.paper}>
                                         {module.launcher.text}
                                     </Paper>
@@ -51,4 +52,20 @@ const IconsGrid = ({modules}) => {
 
 }
 
-export default IconsGrid;
+const mapStateToProps = (state) => {
+    console.log(state);
+    return {
+        modules: state.desktopData.modules,
+        loading: state.loading,
+        error: state.error
+    }
+}
+
+// const mapDispatchToProps = (dispatch, ownProps) => {
+//     const desktopService = ownProps.context;
+//     return bindActionCreators({
+//         fetchIcons: fetchIcons(desktopService)
+//     }, dispatch)
+// }
+
+export default connect(mapStateToProps)(IconsGrid);
