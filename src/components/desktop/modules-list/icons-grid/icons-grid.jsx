@@ -3,6 +3,8 @@ import { Paper, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
+import { Link } from 'react-router-dom';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,8 +39,15 @@ const IconsGrid = (props) => {
                         if (module.launcher.shortcut) {
                             return (
                                 <Grid key={module.id} item xs={6} md={4} lg={2} className={classes.gridItem}>
-                                    <Paper className={classes.paper} onClick={() => {alert('!!!')}}>
-                                        {module.launcher.text}
+                                    <Paper className={classes.paper} onClick={() => {
+                                        switch (module.url) {
+                                            case '':
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                    }}>
+                                        <Link to={module.url}>{module.launcher.text}</Link>
                                     </Paper>
                                 </Grid>
                             )

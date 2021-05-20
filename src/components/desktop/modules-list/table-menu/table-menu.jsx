@@ -8,8 +8,11 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { connect } from 'react-redux';
 
+import { useHistory } from 'react-router-dom';
+
 import { updateTableMenuItems } from '../../actions'
 import { bindActionCreators } from 'redux';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,7 +30,15 @@ const useStyles = makeStyles((theme) => ({
 
 
 const TableMenu = (props) => {
+    let history = useHistory();
     const classes = useStyles();
+
+
+    let container = [];
+
+    const redirect = (url) => {
+        history.push(url)
+    }
 
     const createMenuItems = () => {
         let items = [];
@@ -38,7 +49,6 @@ const TableMenu = (props) => {
         } else {
             items = currentNodePath[currentNodePath.length - 1].items;
         }
-        let container = [];
         if (currentNodePath.slice().length < 1) {
             container.push('')
         } else {
@@ -59,7 +69,7 @@ const TableMenu = (props) => {
             let url;
             let currentNode = currentNodePath.pop()
             url = currentNode.url;
-            //click function
+            redirect(url);
         } else {
             items.map(element => {
                 container.push(
@@ -68,22 +78,26 @@ const TableMenu = (props) => {
                             let newPath = currentNodePath.slice();
                             newPath.push(element);
                             props.onUpdateTableMenuItems(newPath);
-
                         }}>
                             <ListItemText primary={element.name} className={classes.text} />
                         </ListItem>
                     </>
                 );
             })
-            return container;
         }
+        return container;
     };
 
-
-    if (props.menuMap.isVisible) {
+    if (!props.menuMap) {
+        return (
+            <div>
+                Loading...
+            </div>
+        )
+    } else if (props.menuMap.isVisible) {
+        console.log(props.menuMap)
         return (
             <>
-                {/* {console.log(currentNodePath)} */}
                 <List
                     component="nav"
                     aria-labelledby="nested-list-subheader"
@@ -94,7 +108,7 @@ const TableMenu = (props) => {
             </>
         )
     } else {
-        return (<></>);
+        return <></>
     }
 };
 
@@ -105,8 +119,6 @@ const mapStateToProps = (state) => {
         error: state.desktopData.error
     }
 }
-
-
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return bindActionCreators({

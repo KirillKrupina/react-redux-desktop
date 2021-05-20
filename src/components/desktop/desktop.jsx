@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 
 import Header from './header';
-import DesktopIconsServiceContext from '../../contexts/desktop-icons-service-context/desktop-icons-service-context'
 import ModulesList from './modules-list/modules-list';
 import { fetchDesktopData, clickHeaderMenuButton } from './actions';
 import { connect } from 'react-redux';
@@ -13,7 +12,6 @@ const Desktop = (props) => {
     const {user, onHeaderMenuButtonClicked} = props;
 
     useEffect(() => {
-        console.log(props);
         props.fetchDesktopData()
     }, []);
 
@@ -32,6 +30,7 @@ const mapStateToProps = (state) => {
     return {
         user: state.desktopData.user,
         modules: state.desktopData.modules,
+        menuMap: state.desktopData.menuMap,
         loading: state.loading,
         error: state.error
     }

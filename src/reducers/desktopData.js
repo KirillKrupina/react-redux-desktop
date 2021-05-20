@@ -78,6 +78,8 @@ const updateDesktopData = (state, action) => {
     }
 }
 
+
+
 const createNodeByPath = (nodes, path, separator = '/') => {
     // Довідники/Адмінпрактика
     // {
@@ -127,8 +129,7 @@ const createMenuMap = (data) => {
     return nodes;
 }
 
-let data = [];
-const rebuildJson = (nodes, parentKey, items) => {
+const rebuildJson = (nodes, parentKey, items, data = []) => {
 
     let node;
 
@@ -159,7 +160,7 @@ const rebuildJson = (nodes, parentKey, items) => {
                 'name': key,
                 'items': []
             };
-            rebuildJson(node, key, items)
+            rebuildJson(node, key, items, data)
         }
 
     }
