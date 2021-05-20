@@ -1,43 +1,117 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import TreeView from '@material-ui/lab/TreeView';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import TreeItem from '@material-ui/lab/TreeItem';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-const useStyles = makeStyles({
+import { connect } from 'react-redux';
+
+import { updateTableMenuItems } from '../../actions'
+import { bindActionCreators } from 'redux';
+
+const useStyles = makeStyles((theme) => ({
     root: {
-        height: 216,
-        flexGrow: 1,
-        maxWidth: 400,
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: '#3F51B5',
     },
-});
+    text: {
+        color: 'white'
+    },
+    nested: {
+        paddingLeft: theme.spacing(4),
+    },
+}));
 
-const TableMenu = () => {
+
+const TableMenu = (props) => {
     const classes = useStyles();
 
-    return (
-        <TreeView
-            className={classes.root}
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-            multiSelect
-        >
-            <TreeItem nodeId="1" label="Applications">
-                <TreeItem nodeId="2" label="Calendar" />
-                <TreeItem nodeId="3" label="Chrome" />
-                <TreeItem nodeId="4" label="Webstorm" />
-            </TreeItem>
-            <TreeItem nodeId="5" label="Documents">
-                <TreeItem nodeId="6" label="Material-UI">
-                    <TreeItem nodeId="7" label="src">
-                        <TreeItem nodeId="8" label="index.js" />
-                        <TreeItem nodeId="9" label="tree-view.js" />
-                    </TreeItem>
-                </TreeItem>
-            </TreeItem>
-        </TreeView>
-    );
+    const createMenuItems = () => {
+        let items = [];
+        let currentNodePath = props.menuMap.currentNodePath;
+
+        if (currentNodePath.length < 1) {
+            items = props.menuMap.items;
+        } else {
+            items = currentNodePath[currentNodePath.length - 1].items;
+        }
+        let container = [];
+        if (currentNodePath.slice().length < 1) {
+            container.push('')
+        } else {
+            container.push(
+                <ListItem key='backArrow' button onClick={() => {
+                    let newPath = currentNodePath.slice();
+                    newPath.pop();
+                    props.onUpdateTableMenuItems(newPath);
+                }}>
+                    <ListItemIcon>
+                        <ArrowBackIcon style={{ color: 'white' }} />
+                    </ListItemIcon>
+                </ListItem>
+            );
+        }
+
+        if (items === undefined) {
+            let url;
+            let currentNode = currentNodePath.pop()
+            url = currentNode.url;
+            //click function
+        } else {
+            items.map(element => {
+                container.push(
+                    <>
+                        <ListItem key={element.name} button onClick={() => {
+                            let newPath = currentNodePath.slice();
+                            newPath.push(element);
+                            props.onUpdateTableMenuItems(newPath);
+
+                        }}>
+                            <ListItemText primary={element.name} className={classes.text} />
+                        </ListItem>
+                    </>
+                );
+            })
+            return container;
+        }
+    };
+
+
+    if (props.menuMap.isVisible) {
+        return (
+            <>
+                {/* {console.log(currentNodePath)} */}
+                <List
+                    component="nav"
+                    aria-labelledby="nested-list-subheader"
+                    className={classes.root}
+                >
+                    {createMenuItems()}
+                </List>
+            </>
+        )
+    } else {
+        return (<></>);
+    }
 };
 
-export default TableMenu;
+const mapStateToProps = (state) => {
+    return {
+        menuMap: state.desktopData.menuMap,
+        loading: state.desktopData.loading,
+        error: state.desktopData.error
+    }
+}
+
+
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return bindActionCreators({
+        onUpdateTableMenuItems: updateTableMenuItems
+    }, dispatch)
+}
+export default connect(mapStateToProps, mapDispatchToProps)(TableMenu);
+

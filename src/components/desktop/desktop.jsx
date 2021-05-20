@@ -3,15 +3,14 @@ import React, {useEffect} from 'react';
 import Header from './header';
 import DesktopIconsServiceContext from '../../contexts/desktop-icons-service-context/desktop-icons-service-context'
 import ModulesList from './modules-list/modules-list';
-import { fetchDesktopData } from './actions';
+import { fetchDesktopData, clickHeaderMenuButton } from './actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 
 
 const Desktop = (props) => {
-   
-    const {user, modules} = props;
+    const {user, onHeaderMenuButtonClicked} = props;
 
     useEffect(() => {
         console.log(props);
@@ -21,7 +20,7 @@ const Desktop = (props) => {
 
     return (
         <>
-            <Header user={user}/>
+            <Header user={user} onHeaderMenuButtonClicked={onHeaderMenuButtonClicked}/>
             <ModulesList />
         </>
     )
@@ -29,6 +28,7 @@ const Desktop = (props) => {
 
 
 const mapStateToProps = (state) => {
+    console.log(state);
     return {
         user: state.desktopData.user,
         modules: state.desktopData.modules,
@@ -40,7 +40,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     const desktopService = ownProps.desktopService;
     return bindActionCreators({
-        fetchDesktopData: fetchDesktopData(desktopService)
+        fetchDesktopData: fetchDesktopData(desktopService),
+        onHeaderMenuButtonClicked: clickHeaderMenuButton
     }, dispatch)
 }
 

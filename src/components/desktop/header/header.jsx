@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Header = ({ user }) => {
+const Header = ({ user, onHeaderMenuButtonClicked }) => {
     const classes = useStyles();
 
     if (!user) {
@@ -31,7 +31,7 @@ const Header = ({ user }) => {
             <div className={classes.root}>
                 <AppBar position='sticky'>
                     <Toolbar>
-                        <IconButton edge='start' aria-label="menu" className={classes.menuButton} color="inherit">
+                        <IconButton edge='start' aria-label="menu" className={classes.menuButton} color="inherit" onClick={onHeaderMenuButtonClicked}>
                             <MenuIcon />
                         </IconButton>
                         <Typography variant='h6' className={classes.title}>

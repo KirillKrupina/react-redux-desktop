@@ -37,7 +37,7 @@ const IconsGrid = (props) => {
                         if (module.launcher.shortcut) {
                             return (
                                 <Grid key={module.id} item xs={6} md={4} lg={2} className={classes.gridItem}>
-                                    <Paper className={classes.paper}>
+                                    <Paper className={classes.paper} onClick={() => {alert('!!!')}}>
                                         {module.launcher.text}
                                     </Paper>
                                 </Grid>
@@ -48,24 +48,14 @@ const IconsGrid = (props) => {
             </div>
         )
     }
-
-
 }
 
 const mapStateToProps = (state) => {
-    console.log(state);
     return {
         modules: state.desktopData.modules,
-        loading: state.loading,
-        error: state.error
+        loading: state.desktopData.loading,
+        error: state.desktopData.error
     }
 }
-
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//     const desktopService = ownProps.context;
-//     return bindActionCreators({
-//         fetchIcons: fetchIcons(desktopService)
-//     }, dispatch)
-// }
 
 export default connect(mapStateToProps)(IconsGrid);

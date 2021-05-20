@@ -19,6 +19,19 @@ const desktopDataError = (error) => {
     }
 }
 
+const updateTableMenuItems = (data) => {
+    return {
+        type: 'UPDATE_TABLE_MENU_ITEMS',
+        payload: data
+    }
+}
+
+const clickHeaderMenuButton = () => {
+    return {
+        type: 'CLICK_HEADER_MENU_BUTTON'
+    }
+}
+
 const fetchDesktopData = (desktopService) => () => {
     return (dispatch) => {
         dispatch(desktopDataRequested());
@@ -32,5 +45,7 @@ const fetchDesktopData = (desktopService) => () => {
 }
 
 export {
-    fetchDesktopData
+    fetchDesktopData,
+    updateTableMenuItems,
+    clickHeaderMenuButton
 }
